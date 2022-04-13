@@ -1,0 +1,31 @@
+- hosts: all
+  become: true
+  pre_tasks:
+
+          - name: install updates
+            apt:
+                upgrade: dist
+                update_cache: yes
+            when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+
+          - name: Create a sudoer user named ai
+            user:
+                    name: ai
+                    groups: root
+
+          - name: add ssh key for ai
+            authorized_key:
+                    user: ai
+                    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC60xF0+WVVvpsStgY+AYxKx3e6konbxPUzjMSgbZMnG ansible"
+
+          - name: add sudoers file for ai
+            copy:
+                    src: sudoers_ai
+                    dest: /etc/sudoers.d/
+                    owner: root
+                    group: root
+                    mode: 0440
