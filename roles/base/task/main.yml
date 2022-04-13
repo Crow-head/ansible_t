@@ -1,0 +1,9 @@
+- hosts: all
+  become: true
+  tasks:
+
+          - name: add ssh key for ai
+            tags: always
+            authorized_key:
+                    user: ai
+                    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC60xF0+WVVvpsStgY+AYxKx3e6konbxPUzjMSgbZMnG ansible"

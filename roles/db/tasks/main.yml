@@ -1,0 +1,19 @@
+- hosts: db
+  become: true
+  tasks:
+
+          - name: install maria DB Ubuntu
+            tags: mariadb,db,ubuntu
+            apt:
+                    name:
+                            - mariadb-server
+                    state: latest
+            when: ansible_distribution == "Ubuntu"
+
+          - name: start and enable mariadb
+            tags: mariadb,db,ubuntu
+            service:
+                    name: mariadb
+                    state: started
+                    enabled: yes
+            when: ansible_distribution == "Ubuntu"

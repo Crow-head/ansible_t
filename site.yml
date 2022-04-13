@@ -11,90 +11,19 @@
 
 - hosts: all
   become: true
-  tasks:
-
-          - name: add ssh key for ai
-            tags: always
-            authorized_key:
-                    user: ai
-                    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC60xF0+WVVvpsStgY+AYxKx3e6konbxPUzjMSgbZMnG ansible"
-
+  roles:
+          - base
 - hosts: web_server
   become: true
-  tasks:
-
-  - name: install apache and php packages
-    tags: ubuntu,apache,apache2
-    apt:
-
-            name:
-                    - apache2
-                    - libapache2-mod-php
-                    - tmux
-                    - atop
-            state: latest
-    when: ansible_distribution == "Ubuntu"
-
-  - name: change apache conf file
-    tags: conf
-    lineinfile:
-            path: /etc/apache2/apache2.conf
-            regexp: '^KeepAliveTimeout'
-            line: KeepAliveTimeout 5
-    when: ansible_distribution == "Ubuntu"
-    register: apache2
-
-  - name: restart apache after conf change
-    tags: conf
-    service:
-            name: apache2
-            state: restarted
-    when: apache2.changed
-
-  - name: copy html file on apache www directory
-    tags: ubuntu,apache,apache2
-    copy:
-            src: default_site.html
-            dest: /var/www/html/index.html
-            owner: root
-            group: root
-            mode: 0644
-
-- hosts: test
+  roles:
+          - web_server
+ 
+- hosts: terraform
   become: true
-  tasks:
+  roles:
+          - terraform
 
-          - name: install unzip
-            tags: tera
-            package:
-                    name: unzip
-
-          - name: install trraform
-            tags: tera
-            unarchive:
-                          src: https://releases.hashicorp.com/terraform/1.1.8/terraform_1.1.8_linux_amd64.zip
-                          dest: /usr/local/bin
-                          remote_src: yes
-                          mode: 0755
-                          owner: root
-                          group: root
-
-- hosts: DB
+- hosts: db
   become: true
-  tasks:
-
-          - name: install maria DB Ubuntu
-            tags: mariadb,db,ubuntu
-            apt:
-                    name:
-                            - mariadb-server
-                    state: latest
-            when: ansible_distribution == "Ubuntu"
-
-          - name: start and enable mariadb
-            tags: mariadb,db,ubuntu
-            service:
-                    name: mariadb
-                    state: started
-                    enabled: yes
-            when: ansible_distribution == "Ubuntu"
+  roles:
+          - db 

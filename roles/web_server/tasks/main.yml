@@ -1,0 +1,40 @@
+- hosts: web_server
+  become: true
+  tasks:
+
+  - name: install apache and php packages
+    tags: ubuntu,apache,apache2
+    apt:
+
+            name:
+                    - apache2
+                    - libapache2-mod-php
+                    - tmux
+                    - atop
+            state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: change apache conf file
+    tags: conf
+    lineinfile:
+            path: /etc/apache2/apache2.conf
+            regexp: '^KeepAliveTimeout'
+            line: KeepAliveTimeout 5
+    when: ansible_distribution == "Ubuntu"
+    register: apache2
+
+  - name: restart apache after conf change
+    tags: conf
+    service:
+            name: apache2
+            state: restarted
+    when: apache2.changed
+
+  - name: copy html file on apache www directory
+    tags: ubuntu,apache,apache2
+    copy:
+            src: default_site.html
+            dest: /var/www/html/index.html
+            owner: root
+            group: root
+            mode: 0644

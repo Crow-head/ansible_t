@@ -1,0 +1,18 @@
+- hosts: terraform
+  become: true
+  tasks:
+
+          - name: install unzip
+            tags: tera
+            package:
+                    name: unzip
+
+          - name: install trraform
+            tags: tera
+            unarchive:
+                          src: https://releases.hashicorp.com/terraform/1.1.8/terraform_1.1.8_linux_amd64.zip
+                          dest: /usr/local/bin
+                          remote_src: yes
+                          mode: 0755
+                          owner: root
+                          group: root
