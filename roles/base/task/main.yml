@@ -1,7 +1,3 @@
-- hosts: all
-  become: true
-  tasks:
-
           - name: add ssh key for ai
             tags: always
             authorized_key:

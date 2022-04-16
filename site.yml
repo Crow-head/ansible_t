@@ -13,6 +13,7 @@
   become: true
   roles:
           - base
+
 - hosts: web_server
   become: true
   roles:

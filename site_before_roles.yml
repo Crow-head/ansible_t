@@ -42,7 +42,7 @@
             regexp: '^KeepAliveTimeout'
             line: KeepAliveTimeout 5
     when: ansible_distribution == "Ubuntu"
-    register: apache2
+    notify: restart_apache
 
   - name: restart apache after conf change
     tags: conf

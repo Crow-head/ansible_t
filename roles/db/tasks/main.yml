@@ -1,7 +1,3 @@
-- hosts: db
-  become: true
-  tasks:
-
           - name: install maria DB Ubuntu
             tags: mariadb,db,ubuntu
             apt:

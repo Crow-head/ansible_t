@@ -1,7 +1,3 @@
-- hosts: terraform
-  become: true
-  tasks:
-
           - name: install unzip
             tags: tera
             package:
